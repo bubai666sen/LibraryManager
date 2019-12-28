@@ -1,0 +1,132 @@
+{% extends 'adminlte/base.html' %}
+{% block content %}
+    <h1>Hi {{ request.user.username }} !</h1>
+    <div class="box box-success">
+        <div class="box-header with-border">
+            <h3 class="box-title">Available books in our library</h3>
+
+            <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            </div>
+            <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" style="">
+            <table id="library" class="datatable footable table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                        <th>Publish Year</th>
+                        <th>Request Book</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in book_list %}
+                        <tr>
+                            <td>{{book.title}}</td>
+                            <td>{{book.author}}</td>
+                            <td>{{book.publisher}}</td>
+                            <td>{{book.year_of_publish}}</td>
+                            <td><button id="send_request" class="btn btn-success" onclick="requestBook('{{book.book_id}}');"><i class="fa fa-send"></i> Request</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            <!-- /.box-body -->
+    </div>
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Requested books by you</h3>
+
+            <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            </div>
+            <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" style="">
+            <table id="library_user_requested" class="datatable footable table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                        <th>Publish Year</th>
+                        <th>Request Status</th>
+                        <th>Comments</th>
+                        <th>Fine</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in user_requested_book_list %}
+                        <tr>
+                            <td>{{book.book.title}}</td>
+                            <td>{{book.book.author}}</td>
+                            <td>{{book.book.publisher}}</td>
+                            <td>{{book.book.year_of_publish}}</td>
+                            <td>{{book.request_status}}</td>
+                            <td>{{book.comments}}</td>
+                            <td>{{book.fine}}</td>
+                            <td>{{book.payment_status}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            <!-- /.box-body -->
+    </div>
+    <form id="reload" action="{% url 'index' %}"></form>
+    <script>
+    $(document).ready( function () {
+        $('.datatable').DataTable();
+    } );
+    </script>
+    <script>
+        function requestBook(book_id) {
+            swal({
+            title: "Are you sure?",
+            text: "Once requested, only the admin panel can make changes to it!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                var token = '{{csrf_token}}';
+                $.ajax({url: "{% url 'request_book' %}",
+                headers: {"X-CSRFToken": token },
+                type: "POST",
+                data:{
+                    book_id: book_id,
+                    },
+                success: 
+                function(result) { 
+                        if(result.success){
+                            // alert(result.message);
+                            swal({
+                                icon: "success",
+                                text: result.message
+                            });
+                        } else {
+                            // alert(result.message);
+                            swal({
+                                icon: "error",
+                                text: result.message
+                            });
+                        }
+                    }
+                });
+                document.getElementById("reload").submit();
+            } else {
+                swal("Request cancelled!");
+            }
+            });
+        }
+    </script>
+{% endblock %}

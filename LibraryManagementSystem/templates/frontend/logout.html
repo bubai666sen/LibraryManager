@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+<body>
+    <center>
+        <h1 style="color: darkgreen">Logged Out!</h1>
+        <a href="{% url 'login_or_signup' %}" id="go_back" >Login Again!</a>
+    </center>
+    <form id="get_out" action="{% url 'login_or_signup' %}">
+        
+    </form>
+    <script>
+        $(document).ready(function(){
+            $("#go_back").trigger("click");
+            document.getElementById("get_out").submit();
+        });
+    </script>
+</body>
+</html>
