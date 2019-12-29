@@ -1,12 +1,16 @@
 # LibraryManager
 A library management system using python and django.
 
-<pip install django>
+#Required Packages.
 
-<pip install pillow>
+pip install django
 
-<pip install django-admin-toolbox>
+pip install pillow
 
-<pip install django-admin-footer>
+pip install django-admin-toolbox
 
-<pip install django-adminlte2>
+pip install django-admin-footer
+
+pip install django-adminlte2
+
+# Powered by Sourav Sen
