@@ -14,7 +14,7 @@ import os
 
 from datetime import datetime
 
-SITE_NAME = "Library Manager"
+SITE_NAME = "Library Manager  by Sourav Sen"
 
 ADMIN_FOOTER_DATA = {
   'site_url': 'mailto:bubai666sen@gmail.com',
